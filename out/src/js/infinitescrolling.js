@@ -1,7 +1,6 @@
 // globale Variablen initialisieren
-var touch_flag = false;
-var ajax_load_count = 1;
-var ajax_loading = false;
+var gw_oxid_infinitescrolling_ajax_loading = false;
+var gw_oxid_infinitescrolling_images_to_unveil = [];
 
 // IIFE - Immediately Invoked Function Expression
 (function(gw) {
@@ -17,15 +16,134 @@ var ajax_loading = false;
 
         /*******************************************************/
         // AJAX scrolling (infinite scrolling)
-        /* 	$("#list-functions,#list-functions-bottom").hide(); */
+
+        // check if max auto page amount is set
+        if(typeof gw_oxid_infinitescrolling_scrollpagesamount === 'undefined') {
+            console.log('gw_oxid_infinitescrolling_scrollpagesamount is not set - infinite scrolling will not work properly');
+            return false;
+        }
+
+        // hide standard listing paginations buttons
         $("#list-functions-bottom,.pagination").hide();
+
+        /**
+         * load next articles and append them to product list
+         */
+        function gw_oxid_infinitescrolling_load_next_articles() {
+            next_page_url = "";
+            next_page_title = "";
+            if($(".gw_oxid_infinitescrolling-next-page").length > 0) {
+                next_page_url = $(".gw_oxid_infinitescrolling-next-page").attr("href");
+            }
+
+            gw_oxid_infinitescrolling_ajax_loading = true;
+            loading_delay = 0;
+            $.get(next_page_url, function(data){
+                next_page_title = $(data).filter('title').text();
+                $items_to_add = $(data).find("#productList");
+                $new_next_page_link = $(data).find(".gw_oxid_infinitescrolling-next-page");
+                $items_to_add.find(".productBox").each(function(){
+                    var $productList = $("#productList");
+                    $(this).hide();
+                    if( $productList.length > 0 ) {
+                        // trigger image unveil
+                        var $image = $(this).find("img");
+                        $image.unveil();
+                        gw_oxid_infinitescrolling_images_to_unveil.push($image);
+
+                        // add article to list
+                        $productList.append($(this));
+                    }
+
+                    $(this).delay(loading_delay+=50).slideDown(400);
+                });
+
+                // add the next page link
+                $(".gw_oxid_infinitescrolling-next-page").replaceWith($new_next_page_link);
+
+                // ajax loading complete
+                gw_oxid_infinitescrolling_ajax_loading = false;
+            }).done(function(){
+                gw_oxid_infinitescrolling_trigger_infiniteScrollingDone(next_page_url, next_page_title);
+            });
+        }
+
+        /**
+         * load previous articles and prepend them to product list
+         */
+        function gw_oxid_infinitescrolling_load_prev_articles() {
+            prev_page_url = "";
+            if($(".gw_oxid_infinitescrolling-prev-page").length > 0) {
+                prev_page_url = $(".gw_oxid_infinitescrolling-prev-page").attr("href");
+            }
+
+            gw_oxid_infinitescrolling_ajax_loading = true;
+            loading_delay = 0;
+            $.get(prev_page_url, function(data){
+                prev_page_title = $(data).filter('title').text();
+                $items_to_add = $(data).find("#productList");
+                $new_prev_page_link = $(data).find(".gw_oxid_infinitescrolling-prev-page");
+                $items_to_add.find(".productBox").each(function(){
+                    var $productList = $("#productList");
+                    $(this).hide();
+                    if( $productList.length > 0 ) {
+                        // trigger image unveil
+                        var $image = $(this).find("img");
+                        $image.unveil();
+                        gw_oxid_infinitescrolling_images_to_unveil.push($image);
+
+                        // add article to list
+                        $productList.prepend($(this));
+                    }
+
+                    $(this).delay(loading_delay+=50).slideDown(400);
+                });
+
+                // add the prev page link
+                $(".gw_oxid_infinitescrolling-prev-page").replaceWith($new_prev_page_link);
+
+                // ajax loading complete
+                gw_oxid_infinitescrolling_ajax_loading = false;
+            }).done(function(){
+                gw_oxid_infinitescrolling_trigger_infiniteScrollingDone(prev_page_url, prev_page_title);
+            });
+        }
+
+        /**
+         * trigger event infiniteScrollingDone
+         */
+        function gw_oxid_infinitescrolling_trigger_infiniteScrollingDone(loadeddataurl,pagetitle) {
+            // trigger event that infinite scrolling is done
+            $.event.trigger({
+                type: "infiniteScrollingDone",
+                pagetitle: pagetitle,
+                url: loadeddataurl,
+                time: new Date()
+            });
+        }
+
+        $(window).on('infiniteScrollingDone', function(event){
+            // add history state
+            var stateObj = {};
+            history.pushState(stateObj, event.pagetitle, event.url);
+            console.log(event);
+            
+            // trigger resize so that images are loaded in case they are on viewport
+            $.each(gw_oxid_infinitescrolling_images_to_unveil, function(){
+                $(this).trigger('unveil');
+            });
+            gw_oxid_infinitescrolling_images_to_unveil = [];
+        });
+
+
         $(window).scroll(function(){
+            // TODO:
+            // - implement loading next articles with gw_oxid_infinitescrolling_load_next_articles on scroll
+
+
+
             scroll_trigger_position = $("#scroll-trigger").position();
 
-            next_page_url = "";
-            if($("#product-list-box #next-page"+ajax_load_count).length > 0) {
-                next_page_url = $("#product-list-box #next-page"+ajax_load_count).attr("href");
-            }
 
             /*
                     console.log(next_page_url);
@@ -35,74 +153,19 @@ var ajax_loading = false;
 
 
             // perform load
-            if( scroll_trigger_position.top < ($(document).scrollTop()+$(window).height()-75) && !ajax_loading && next_page_url != "" ) {
-                ajax_loading = true;
-                loading_delay = 0;
-                $("#product-list-box").after('<div class="list-loading-circle" />');
-                $(".list-loading-circle").delay(500).slideDown();
-                $("#product-list-box #next-page"+ajax_load_count).delay(500).slideUp(function(){
-                    $.get(next_page_url, function(data){
-                        items_to_add = $(data).find("#product-list-box");
-                        next_page_link = $(data).find(".next-page");
-                        items_to_add.find(".proxid-product-list-item").each(function(){
-                            $(this).hide();
-                            if( $("#productList").length > 0 ) {
-                                //new template (1.1)
-                                $("#productList").append($(this));
-                            } else {
-                                // old template (1.0)
-                                $("#product-list-box").append($(this));
-                            }
-
-                            $(this).delay(loading_delay+=50).slideDown(400);
-                        });
-                        ajax_load_count++;
-
-                        // hide loading circle
-                        window.setTimeout(function(){
-                            $(".list-loading-circle").slideUp(function(){
-                                $(this).remove();
-                            });
-                        }, 300);
-
-                        // add the next page link
-                        window.setTimeout(function(){
-                            next_page_link.hide();
-                            if($("#productList").length > 0) {
-                                //new template (1.1)
-                                $("#productList").append(next_page_link);
-                            } else {
-                                // old template (1.0)
-                                $("#product-list-box").append(next_page_link);
-                            }
-                            next_page_link.slideDown();
-                            ajax_loading = false;
-                        }, 300);
-
-                        // trigger event that infinite scrolling is done
-                        $.event.trigger({
-                            type: "infiniteScrollingDone",
-                            message: "infiniteScrollingDone Message",
-                            time: new Date()
-                        });
-                        if( jQuery ) {
-                            jQuery.event.trigger({
-                                type: "infiniteScrollingDone",
-                                message: "infiniteScrollingDone Message",
-                                time: new Date()
-                            });
-                        }
-                    });
-                });
+            if( scroll_trigger_position.top < ($(document).scrollTop()+$(window).height()-75) && !gw_oxid_infinitescrolling_ajax_loading && typeof next_page_url !== 'undefined' && next_page_url != "" ) {
+                // TODO: trigger next article load on scroll
             }
         });
 
         // if user clicks on next-page-Link trigger infinite scrolling
-        $(document).on('click', '.next-page', function(event){
-            $('html, body').animate({
-                scrollTop: $(document).height()
-            },100);
-            event.preventDefault();
+        $(document).on('click', '.gw_oxid_infinitescrolling-prev-page', function(event){
+            gw_oxid_infinitescrolling_load_prev_articles();
+            return false;
+        });
+        $(document).on('click', '.gw_oxid_infinitescrolling-next-page', function(event){
+            gw_oxid_infinitescrolling_load_next_articles();
+            return false;
         });
         /*******************************************************/
 
