@@ -14,12 +14,13 @@ $aModule = array(
 		'en'=>'Infinite scroll through the articles on article list pages (e.g., categories).',
 	),
 	'thumbnail'		=> '',
-	'version'		=> '1.0',
+	'version'		=> 'beta 1.0',
 	'email'			=> 'email@gewend.de',
 	'url'			=> 'https://www.gewend.de',
 	'author'		=> 'g:wend Webentwicklung, Gregor Wendland',
 	'settings' => array(
-		array('group' => 'infinitescrolling', 'name' => 'gw_oxid_infinitescrolling_scrollpagesamount', 'type' => 'str', 'value' => '3'),
+		array('group' => 'infinitescrolling', 'name' => 'gw_oxid_infinitescrolling_scrollpagesamount', 'type' => 'str', 'value' => '5'),
+		array('group' => 'infinitescrolling', 'name' => 'gw_oxid_infinitescrolling_offset', 'type' => 'str', 'value' => '500'),
 	),
 	'extend'       => array(
 	),
