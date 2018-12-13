@@ -58,10 +58,10 @@ let gw_oxid_infinitescrolling_ajax_loading = false,
                     loading_delay = 0; // this is used to delay every slide down of via ajax loaded content
                     $.get(next_page_url, function(data){
                         next_page_title = $(data).filter('title').text();
-                        $items_to_add = $(data).find("#productList");
+                        $items_to_add = $(data).find(".list-container");
                         $new_next_page_link = $(data).find(".gw_oxid_infinitescrolling-next-page");
                         $items_to_add.find("> .row").each(function(){
-                            let $productList = $("#productList");
+                            let $productList = $(".list-container");
                             $(this).hide();
                             if( $productList.length > 0 ) {
                                 // trigger image unveil
@@ -112,10 +112,10 @@ let gw_oxid_infinitescrolling_ajax_loading = false,
                     loading_delay = 0; // this is used to delay every slide down of via ajax loaded content
                     $.get(prev_page_url, function (data) {
                         prev_page_title = $(data).filter('title').text();
-                        $items_to_add = $(data).find("#productList");
+                        $items_to_add = $(data).find(".list-container");
                         $new_prev_page_link = $(data).find(".gw_oxid_infinitescrolling-prev-page");
                         $items_to_add.find("> .row").each(function () {
-                            let $productList = $("#productList");
+                            let $productList = $(".list-container");
                             $(this).hide();
                             if ($productList.length > 0) {
                                 // trigger image unveil
