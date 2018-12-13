@@ -26,22 +26,22 @@ $aModule = array(
 	),
 	'blocks' => array(
 		array(
-			'theme' => 'flow',
+			/*'theme' => 'flow',*/
 			'template' => 'page/list/list.tpl',
 			'block' => 'page_list_productlist',
-			'file' => 'application/views/blocks/productlist.tpl'
+			'file' => 'Application/views/blocks/productlist.tpl'
 		),
 		array(
-			'theme' => 'flow',
+			/*'theme' => 'flow',*/
 			'template' => 'page/search/search.tpl',
 			'block' => 'search_results',
-			'file' => 'application/views/blocks/productlist.tpl'
+			'file' => 'Application/views/blocks/productlist.tpl'
 		),
 		array(
-			'theme' => 'flow',
+			/*'theme' => 'flow',*/
 			'template' => 'widget/locator/paging.tpl',
 			'block' => 'widget_locator_paging',
-			'file' => 'application/views/blocks/widget_locator_paging.tpl'
+			'file' => 'Application/views/blocks/widget_locator_paging.tpl'
 		),
 	),
 	'events'       => array(
