@@ -1,5 +1,5 @@
 // globale Variablen initialisieren
-let gw_oxid_infinitescrolling_ajax_loading = false,
+var gw_oxid_infinitescrolling_ajax_loading = false,
     gw_oxid_infinitescrolling_images_to_unveil = [],
     gw_oxid_infinitescrolling_next_page_auto_loads_count = 0;
 ;
@@ -46,7 +46,7 @@ let gw_oxid_infinitescrolling_ajax_loading = false,
             auto = auto || false;
             if(!gw_oxid_infinitescrolling_ajax_loading) {
                 gw_oxid_infinitescrolling_ajax_loading = true;
-                let $next_page_link = $(".gw_oxid_infinitescrolling-next-page"),
+                var $next_page_link = $(".gw_oxid_infinitescrolling-next-page"),
                     next_page_url = "",
                     next_page_title = ""
                 ;
@@ -61,11 +61,11 @@ let gw_oxid_infinitescrolling_ajax_loading = false,
                         $items_to_add = $(data).find(".list-container");
                         $new_next_page_link = $(data).find(".gw_oxid_infinitescrolling-next-page");
                         $items_to_add.find("> .row").each(function(){
-                            let $productList = $(".list-container");
+                            var $productList = $(".list-container");
                             $(this).hide();
                             if( $productList.length > 0 ) {
                                 // trigger image unveil
-                                let $image = $(this).find("img");
+                                var $image = $(this).find("img");
                                 $image.unveil();
                                 gw_oxid_infinitescrolling_images_to_unveil.push($image);
 
@@ -100,7 +100,7 @@ let gw_oxid_infinitescrolling_ajax_loading = false,
         function gw_oxid_infinitescrolling_load_prev_articles() {
             if(!gw_oxid_infinitescrolling_ajax_loading) {
                 gw_oxid_infinitescrolling_ajax_loading = true;
-                let $prev_page_link = $(".gw_oxid_infinitescrolling-prev-page"),
+                var $prev_page_link = $(".gw_oxid_infinitescrolling-prev-page"),
                     prev_page_url = "",
                     prev_page_title = ""
                 ;
@@ -115,11 +115,11 @@ let gw_oxid_infinitescrolling_ajax_loading = false,
                         $items_to_add = $(data).find(".list-container");
                         $new_prev_page_link = $(data).find(".gw_oxid_infinitescrolling-prev-page");
                         $items_to_add.find("> .row").each(function () {
-                            let $productList = $(".list-container");
+                            var $productList = $(".list-container");
                             $(this).hide();
                             if ($productList.length > 0) {
                                 // trigger image unveil
-                                let $image = $(this).find("img");
+                                var $image = $(this).find("img");
                                 $image.unveil();
                                 gw_oxid_infinitescrolling_images_to_unveil.push($image);
 
@@ -162,12 +162,12 @@ let gw_oxid_infinitescrolling_ajax_loading = false,
          */
         $(window).on('infiniteScrollingDone', function(event){
             // add history state
-            let stateObj = {};
+            var stateObj = {};
             history.pushState(stateObj, event.pagetitle, event.url);
 
             // debug
-            console.log(event);
-            
+            // console.log(event);
+
             // trigger resize so that images are loaded in case they are on viewport
             $.each(gw_oxid_infinitescrolling_images_to_unveil, function(){
                 $(this).trigger('unveil');
