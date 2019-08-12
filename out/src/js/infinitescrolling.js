@@ -22,17 +22,17 @@ var gw_oxid_infinitescrolling_ajax_loading = false,
         // check if needed variables are set
         if(typeof gw_oxid_infinitescrolling_scrollpagesamount === 'undefined') {
             // debug
-            console.log('gw_oxid_infinitescrolling_scrollpagesamount is not set - infinite scrolling will not work properly; maybe clearing cache helps');
+            console.error('gw_oxid_infinitescrolling_scrollpagesamount is not set - infinite scrolling will not work properly; maybe clearing cache helps');
             return false;
         }
         if(typeof gw_oxid_infinitescrolling_offset === 'undefined') {
             // debug
-            console.log('gw_oxid_infinitescrolling_offset is not set - infinite scrolling will not work properly; maybe clearing cache helps');
+            console.error('gw_oxid_infinitescrolling_offset is not set - infinite scrolling will not work properly; maybe clearing cache helps');
             return false;
         }
         if(typeof gw_oxid_infinitescrolling_base_url === 'undefined') {
             // debug
-            console.log('gw_oxid_infinitescrolling_base_url is not set - infinite scrolling will not work properly; maybe clearing cache helps');
+            console.error('gw_oxid_infinitescrolling_base_url is not set - infinite scrolling will not work properly; maybe clearing cache helps');
             return false;
         }
 
