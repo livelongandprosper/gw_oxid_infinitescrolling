@@ -14,7 +14,7 @@ $aModule = array(
 		'en'=>'Infinite scroll through the articles on article list pages (e.g., categories).',
 	),
 	'thumbnail'		=> '',
-	'version'		=> 'beta 1.0',
+	'version'		=> '1.0.1',
 	'email'			=> 'email@gewend.de',
 	'url'			=> 'https://www.gewend.de',
 	'author'		=> 'g:wend Webentwicklung, Gregor Wendland',
@@ -25,6 +25,12 @@ $aModule = array(
 	'extend'       => array(
 	),
 	'blocks' => array(
+		array(
+			/*'theme' => 'flow',*/
+			'template' => 'layout/base.tpl',
+			'block' => 'base_style',
+			'file' => 'Application/views/blocks/base_style.tpl'
+		),
 		array(
 			/*'theme' => 'flow',*/
 			'template' => 'page/list/list.tpl',
