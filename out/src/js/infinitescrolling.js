@@ -1,8 +1,20 @@
 // globale Variablen initialisieren
 var gw_oxid_infinitescrolling_ajax_loading = false,
     gw_oxid_infinitescrolling_images_to_unveil = [],
-    gw_oxid_infinitescrolling_next_page_auto_loads_count = 0;
+    gw_oxid_infinitescrolling_next_page_auto_loads_count = 0,
+    gw_oxid_slideDown_duration = 400;
 ;
+var isInViewport = function (elem, yOffset) {
+    var bounding = elem.getBoundingClientRect();
+    yOffset = yOffset|0;
+    // console.log(((bounding.bottom|0)-yOffset) + " " + (window.innerHeight || document.documentElement.clientHeight));
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom-yOffset <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
 
 // IIFE - Immediately Invoked Function Expression
 (function(gw) {
@@ -73,14 +85,16 @@ var gw_oxid_infinitescrolling_ajax_loading = false,
                                 $productList.append($(this));
                             }
 
-                            $(this).delay(loading_delay+=50).slideDown(400);
+                            $(this).delay(loading_delay+=50).slideDown(gw_oxid_slideDown_duration);
                         });
 
                         // add the next page link
                         $(".gw_oxid_infinitescrolling-next-page").replaceWith($new_next_page_link);
 
                         // ajax loading complete
-                        gw_oxid_infinitescrolling_ajax_loading = false;
+                        window.setTimeout(function(){
+                            gw_oxid_infinitescrolling_ajax_loading = false;
+                        }, gw_oxid_slideDown_duration);
                     }).done(function(){
                         gw_oxid_infinitescrolling_trigger_infiniteScrollingDone(next_page_url, next_page_title);
 
@@ -127,14 +141,16 @@ var gw_oxid_infinitescrolling_ajax_loading = false,
                                 $productList.prepend($(this));
                             }
 
-                            $(this).delay(loading_delay += 50).slideDown(400);
+                            $(this).delay(loading_delay += 50).slideDown(gw_oxid_slideDown_duration);
                         });
 
                         // add the prev page link
                         $(".gw_oxid_infinitescrolling-prev-page").replaceWith($new_prev_page_link);
 
                         // ajax loading complete
-                        gw_oxid_infinitescrolling_ajax_loading = false;
+                        window.setTimeout(function(){
+                            gw_oxid_infinitescrolling_ajax_loading = false;
+                        }, gw_oxid_slideDown_duration);
                     }).done(function () {
                         gw_oxid_infinitescrolling_trigger_infiniteScrollingDone(prev_page_url, prev_page_title);
                     });
@@ -155,10 +171,17 @@ var gw_oxid_infinitescrolling_ajax_loading = false,
                 url: loadeddataurl,
                 time: new Date()
             });
+
+            // send pageview event to google analytics if goggle analytics is active
+            if(typeof ga !== "undefined") {
+                ga('send', 'pageview', loadeddataurl);
+            } else {
+                // console.warn("gw_oxid_infinitescrolling: ga is not loaded");
+            }
         }
 
         /**
-         * rhingthat have to be done after infinite scrolling is done
+         * everything that has to be done after infinite scrolling is complete
          */
         $(window).on('infiniteScrollingDone', function(event){
             // add history state
@@ -179,23 +202,8 @@ var gw_oxid_infinitescrolling_ajax_loading = false,
          * if content is scrolled trigger loading next articles
          */
         $(window).scroll(function(){
-            // debug
-            // shoe scroll trigger line
-            /*
-            $("#scroll-trigger").css({
-                'height':'1px',
-                'background':'red',
-                'display':'block'
-            });
-            */
-
-            scroll_trigger_position = $("#scroll-trigger").position();
-
-            // debug
-            // console.log(scroll_trigger_position.top + " < " + ($(document).scrollTop()+$(window).height()+gw_oxid_infinitescrolling_offset));
-
             // perform load
-            if( scroll_trigger_position.top < ($(document).scrollTop()+$(window).height()+gw_oxid_infinitescrolling_offset) && !gw_oxid_infinitescrolling_ajax_loading && gw_oxid_infinitescrolling_next_page_auto_loads_count < gw_oxid_infinitescrolling_scrollpagesamount) {
+            if(isInViewport(document.querySelector("#scroll-trigger"), gw_oxid_infinitescrolling_offset)) {
                 gw_oxid_infinitescrolling_load_next_articles(true);
             }
         });
