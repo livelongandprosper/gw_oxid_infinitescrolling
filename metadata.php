@@ -14,7 +14,7 @@ $aModule = array(
 		'en'=>'Infinite scroll through the articles on article list pages (e.g., categories).',
 	),
 	'thumbnail'		=> '',
-	'version'		=> '1.0.1',
+	'version'		=> '1.0.2',
 	'email'			=> 'email@gewend.de',
 	'url'			=> 'https://www.gewend.de',
 	'author'		=> 'g:wend Webentwicklung, Gregor Wendland',
