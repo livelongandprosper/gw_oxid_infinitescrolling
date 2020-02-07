@@ -171,13 +171,6 @@ var isInViewport = function (elem, yOffset) {
                 url: loadeddataurl,
                 time: new Date()
             });
-
-            // send pageview event to google analytics if goggle analytics is active
-            if(typeof ga !== "undefined") {
-                ga('send', 'pageview', loadeddataurl);
-            } else {
-                // console.warn("gw_oxid_infinitescrolling: ga is not loaded");
-            }
         }
 
         /**
@@ -190,6 +183,13 @@ var isInViewport = function (elem, yOffset) {
 
             // debug
             // console.log(event);
+
+            // send pageview event to google analytics if goggle analytics is active
+            if(typeof ga !== "undefined") {
+                ga('send', 'pageview', window.location.pathname+window.location.search);
+            } else {
+                // console.warn("gw_oxid_infinitescrolling: ga is not loaded");
+            }
 
             // trigger resize so that images are loaded in case they are on viewport
             $.each(gw_oxid_infinitescrolling_images_to_unveil, function(){
