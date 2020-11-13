@@ -2,7 +2,8 @@
 var gw_oxid_infinitescrolling_ajax_loading = false,
     gw_oxid_infinitescrolling_images_to_unveil = [],
     gw_oxid_infinitescrolling_next_page_auto_loads_count = 0,
-    gw_oxid_slideDown_duration = 400;
+    gw_oxid_slideDown_duration = 400,
+    gw_oxid_infinite_scrolling_list_selector = "#productList,#searchList"
 ;
 var isInViewport = function (elem, yOffset) {
     var bounding = elem.getBoundingClientRect();
@@ -70,10 +71,10 @@ var isInViewport = function (elem, yOffset) {
                     loading_delay = 0; // this is used to delay every slide down of via ajax loaded content
                     $.get(next_page_url, function(data){
                         next_page_title = $(data).filter('title').text();
-                        $items_to_add = $(data).find(".list-container");
+                        $items_to_add = $(data).find(gw_oxid_infinite_scrolling_list_selector);
                         $new_next_page_link = $(data).find(".gw_oxid_infinitescrolling-next-page");
                         $items_to_add.find("> .row").each(function(){
-                            var $productList = $(".list-container");
+                            var $productList = $(gw_oxid_infinite_scrolling_list_selector);
                             $(this).hide();
                             if( $productList.length > 0 ) {
                                 // trigger image unveil
@@ -126,10 +127,10 @@ var isInViewport = function (elem, yOffset) {
                     loading_delay = 0; // this is used to delay every slide down of via ajax loaded content
                     $.get(prev_page_url, function (data) {
                         prev_page_title = $(data).filter('title').text();
-                        $items_to_add = $(data).find(".list-container");
+                        $items_to_add = $(data).find(gw_oxid_infinite_scrolling_list_selector);
                         $new_prev_page_link = $(data).find(".gw_oxid_infinitescrolling-prev-page");
                         $items_to_add.find("> .row").each(function () {
-                            var $productList = $(".list-container");
+                            var $productList = $(gw_oxid_infinite_scrolling_list_selector);
                             $(this).hide();
                             if ($productList.length > 0) {
                                 // trigger image unveil
