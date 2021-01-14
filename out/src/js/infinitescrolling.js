@@ -61,15 +61,17 @@ var isInViewport = function (elem, yOffset) {
                 gw_oxid_infinitescrolling_ajax_loading = true;
                 var $next_page_link = $(".gw_oxid_infinitescrolling-next-page"),
                     next_page_url = "",
+                    data_url = "",
                     next_page_title = ""
                 ;
                 if($next_page_link.length > 0) {
                     next_page_url = $next_page_link.attr("href");
+                    data_url = next_page_url + (next_page_url.indexOf("?") !== false ? '&' : '?') + "ajaxcall=1"; // this is important because static script are not rendered when calld via ajax @see oxid view helper JavaScriptRenderer.php render function
                 }
 
                 if(next_page_url) {
                     loading_delay = 0; // this is used to delay every slide down of via ajax loaded content
-                    $.get(next_page_url, function(data){
+                    $.get(data_url, function(data){
                         next_page_title = $(data).filter('title').text();
                         $items_to_add = $(data).find(gw_oxid_infinite_scrolling_list_selector);
                         $new_next_page_link = $(data).find(".gw_oxid_infinitescrolling-next-page");
@@ -117,15 +119,17 @@ var isInViewport = function (elem, yOffset) {
                 gw_oxid_infinitescrolling_ajax_loading = true;
                 var $prev_page_link = $(".gw_oxid_infinitescrolling-prev-page"),
                     prev_page_url = "",
+                    data_url = "",
                     prev_page_title = ""
                 ;
                 if ($prev_page_link.length > 0) {
                     prev_page_url = $prev_page_link.attr("href");
+                    data_url = prev_page_url + (prev_page_url.indexOf("?") !== false ? '&' : '?') + "ajaxcall=1"; // this is important because static script are not rendered when calld via ajax @see oxid view helper JavaScriptRenderer.php render function
                 }
 
                 if(prev_page_url) {
                     loading_delay = 0; // this is used to delay every slide down of via ajax loaded content
-                    $.get(prev_page_url, function (data) {
+                    $.get(data_url, function (data) {
                         prev_page_title = $(data).filter('title').text();
                         $items_to_add = $(data).find(gw_oxid_infinite_scrolling_list_selector);
                         $new_prev_page_link = $(data).find(".gw_oxid_infinitescrolling-prev-page");
