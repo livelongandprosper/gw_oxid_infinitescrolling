@@ -66,7 +66,7 @@ var isInViewport = function (elem, yOffset) {
                 ;
                 if($next_page_link.length > 0) {
                     next_page_url = $next_page_link.attr("href");
-                    data_url = next_page_url + (next_page_url.indexOf("?") !== false ? '&' : '?') + "ajaxcall=1"; // this is important because static script are not rendered when calld via ajax @see oxid view helper JavaScriptRenderer.php render function
+                    data_url = next_page_url + (next_page_url.indexOf("?") !== -1 ? '&' : '?') + "ajaxcall=1"; // this is important because static script are not rendered when calld via ajax @see oxid view helper JavaScriptRenderer.php render function
                 }
 
                 if(next_page_url) {
@@ -124,7 +124,7 @@ var isInViewport = function (elem, yOffset) {
                 ;
                 if ($prev_page_link.length > 0) {
                     prev_page_url = $prev_page_link.attr("href");
-                    data_url = prev_page_url + (prev_page_url.indexOf("?") !== false ? '&' : '?') + "ajaxcall=1"; // this is important because static script are not rendered when calld via ajax @see oxid view helper JavaScriptRenderer.php render function
+                    data_url = prev_page_url + (prev_page_url.indexOf("?") !== -1 ? '&' : '?') + "ajaxcall=1"; // this is important because static script are not rendered when calld via ajax @see oxid view helper JavaScriptRenderer.php render function
                 }
 
                 if(prev_page_url) {
